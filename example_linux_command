@@ -1,0 +1,1 @@
+$ps aux | awk '{ print"PID: "$2"CMD: "$11 }'

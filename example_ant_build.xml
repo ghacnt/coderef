@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="HistoryViewer Deployinator" default="dist" basedir=".">
+    <description>
+        Deployinator
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="dist"  location="dist"/>
+  <property name="target"  location="target"/>
+  <property name="server.file" value="${src}/server.xml" /> 
+  <property name="context.file" value="${src}/context.xml" /> 
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${target}"/>
+  </target>
+  
+  <target name="-set-environment-properties" depends="init">
+    <switch value="${deploy.env}">
+      <case value="normal_jdbc">
+        <property name="server.file" value="${src}/server.xml" /> 
+        <property name="context.file" value="${src}/context.xml" /> 
+      </case>
+	  <case value="dbcp_jdbc">
+        <property name="server.file" value="${src}/server.xml" /> 
+        <property name="context.file" value="${src}/context_dbcp.xml" /> 
+      </case>
+	</switch>
+  </target>
+
+
+  <target name="dist" depends="init"
+        description="generate the distribution" >
+    <tar destfile="${target}/HistoryViewer-Tomcat-Configuration.tar"
+          basedir="${src}">
+		<fileset dir="${src}">
+			<include name="${server.file}" />
+			<include name="${context.file}" />
+		</fileset>
+	</tar>
+  </target>
+
+  <target name="clean" description="clean up" >
+    <delete dir="${target}"/>
+  </target>
+</project>
